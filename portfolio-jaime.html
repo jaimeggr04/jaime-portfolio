@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaime García Granados · Full Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --accent: #00f0a0;
+    --accent2: #0070f3;
+    --accent3: #7928ca;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --card: #13131a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,240,160,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,160,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 60% at 60% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: radial-gradient(circle, rgba(0,112,243,0.15) 0%, rgba(121,40,202,0.08) 50%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 900px;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 40%, #888899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    background: var(--accent);
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: opacity 0.2s, transform 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border: 1px solid var(--border2);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--accent); background: rgba(0,240,160,0.05); }
+
+  /* ── SECTION BASE ── */
+  section {
+    position: relative;
+    padding: 5rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 3rem;
+    color: var(--text);
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    line-height: 1.8;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+  }
+
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .skill-group:hover { border-color: var(--border2); }
+
+  .skill-group-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    background: var(--bg3);
+    transition: all 0.2s;
+  }
+
+  .tag:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ── EXPERIENCE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-left: 2rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px rgba(0,240,160,0.5);
+    transform: translateX(-3.5px);
+  }
+
+  .timeline-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-company {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.8rem;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .project-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .project-card:hover::before { opacity: 1; }
+
+  .project-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .project-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .stack-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    background: rgba(0,240,160,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(0,240,160,0.2);
+  }
+
+  /* ── CONTACT ── */
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .contact-link:hover { border-color: var(--accent); transform: translateX(4px); }
+
+  .contact-link-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-link-icon.linkedin { background: rgba(0,112,243,0.15); }
+  .contact-link-icon.github { background: rgba(255,255,255,0.08); }
+  .contact-link-icon.email { background: rgba(0,240,160,0.1); }
+
+  .contact-link-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact-link-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .contact-link-value {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .contact-cta {
+    padding: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .contact-cta h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-cta p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label  { animation: fadeUp 0.6s ease both 0.1s; }
+  h1           { animation: fadeUp 0.6s ease both 0.2s; }
+  .hero-subtitle { animation: fadeUp 0.6s ease both 0.35s; }
+  .hero-ctas   { animation: fadeUp 0.6s ease both 0.5s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    section { padding: 3.5rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">JGG.dev</span>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre mí</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experiencia</a></li>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <p class="hero-label">Full Stack Developer · Barcelona</p>
+    <h1>Jaime García<br>Granados</h1>
+    <p class="hero-subtitle">
+      Desarrollo aplicaciones web y móviles con foco en rendimiento, arquitectura limpia y experiencias de usuario que importan.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">Contactar →</a>
+      <a href="https://www.linkedin.com/in/jaime-garc%C3%ADa-granados-46b283290/" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">// 01 — Sobre mí</p>
+  <h2 class="section-title">Un poco sobre mí</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        Soy desarrollador Full Stack con experiencia en backend y frontend, apasionado por construir soluciones digitales robustas y escalables. Trabajo tanto en el lado del servidor como en la interfaz de usuario, adaptándome a las necesidades de cada proyecto.
+      </p>
+      <p>
+        Mi stack principal incluye tecnologías .NET (ASP.NET Core, MVC, Web API) en backend, combinado con JavaScript, HTML/CSS y Angular en frontend. También tengo experiencia con Android nativo en Java y desarrollo en Unity.
+      </p>
+      <p>
+        Actualmente basado en Barcelona, abierto a proyectos freelance y colaboraciones remotas.
+      </p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Tecnologías dominadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">Full</div>
+        <div class="stat-label">Stack · Back + Front</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">Open</div>
+        <div class="stat-label">A nuevos proyectos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">// 02 — Habilidades</p>
+  <h2 class="section-title">Stack tecnológico</h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <p class="skill-group-title">Backend</p>
+      <div class="skill-tags">
+        <span class="tag">ASP.NET Core</span>
+        <span class="tag">ASP.NET MVC</span>
+        <span class="tag">ASP.NET Web API</span>
+        <span class="tag">C#</span>
+        <span class="tag">PHP</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Python</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Frontend</p>
+      <div class="skill-tags">
+        <span class="tag">HTML5</span>
+        <span class="tag">CSS3</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">AngularJS</span>
+        <span class="tag">Desarrollo Web</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Bases de datos</p>
+      <div class="skill-tags">
+        <span class="tag">MySQL</span>
+        <span class="tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Mobile & otros</p>
+      <div class="skill-tags">
+        <span class="tag">Android</span>
+        <span class="tag">Java</span>
+        <span class="tag">Unity</span>
+        <span class="tag">POO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">// 03 — Experiencia</p>
+  <h2 class="section-title">Trayectoria</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <p class="timeline-date">ACTUAL</p>
+      <h3 class="timeline-title">Full Stack Developer</h3>
+      <p class="timeline-company">Freelance / Proyectos propios</p>
+      <p class="timeline-desc">Desarrollo de aplicaciones web y móviles para clientes, desde arquitectura de APIs REST con ASP.NET Core hasta interfaces frontend con JavaScript y Angular. Exploración de modelos de negocio digital y productos propios.</p>
+    </div>
+    <div class="timeline-item">
+      <p class="timeline-date">FORMACIÓN</p>
+      <h3 class="timeline-title">Desarrollo de Aplicaciones</h3>
+      <p class="timeline-company">Especialización técnica</p>
+      <p class="timeline-desc">Formación en desarrollo backend con .NET y C#, bases de datos relacionales, programación orientada a objetos y desarrollo de aplicaciones Android nativas.</p>
+    </div>
+  </div>
+  <p style="font-size:0.8rem; color: var(--muted); font-style: italic; margin-top: 1rem;">
+    * Actualiza esta sección con tu experiencia laboral real para mayor impacto.
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">// 04 — Proyectos</p>
+  <h2 class="section-title">Trabajo destacado</h2>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-icon">⚙️</div>
+      <h3 class="project-title">API REST con ASP.NET Core</h3>
+      <p class="project-desc">Arquitectura de microservicios con endpoints RESTful, autenticación JWT y documentación Swagger. Diseño limpio orientado a escalabilidad.</p>
+      <div class="project-stack">
+        <span class="stack-tag">C#</span>
+        <span class="stack-tag">ASP.NET Core</span>
+        <span class="stack-tag">SQL Server</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">📱</div>
+      <h3 class="project-title">Aplicación Android nativa</h3>
+      <p class="project-desc">App Android desarrollada en Java con patrones de diseño modernos, integración con APIs externas y persistencia local de datos.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Java</span>
+        <span class="stack-tag">Android SDK</span>
+        <span class="stack-tag">SQLite</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🌐</div>
+      <h3 class="project-title">Aplicación Web Full Stack</h3>
+      <p class="project-desc">Plataforma web completa con backend en PHP/Node.js, frontend en JavaScript y Angular, con base de datos MySQL.</p>
+      <div class="project-stack">
+        <span class="stack-tag">PHP</span>
+        <span class="stack-tag">AngularJS</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">Node.js</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-icon">🎮</div>
+      <h3 class="project-title">Proyecto Unity</h3>
+      <p class="project-desc">Desarrollo de experiencia interactiva con Unity y C#, aplicando principios de programación orientada a objetos y patrones de diseño de software.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Unity</span>
+        <span class="stack-tag">C#</span>
+        <span class="stack-tag">POO</span>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.8rem; color: var(--muted); font-style: italic; margin-top: 1.5rem;">
+    * Reemplaza estos cards con tus proyectos reales, añade links a GitHub para mayor impacto.
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">// 05 — Contacto</p>
+  <h2 class="section-title">Hablemos</h2>
+  <div class="contact-wrapper">
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/jaime-garc%C3%ADa-granados-46b283290/" target="_blank" class="contact-link">
+        <div class="contact-link-icon linkedin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0077b5"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+        </div>
+        <div class="contact-link-text">
+          <span class="contact-link-label">LinkedIn</span>
+          <span class="contact-link-value">Jaime García Granados</span>
+        </div>
+      </a>
+      <a href="https://github.com/" target="_blank" class="contact-link">
+        <div class="contact-link-icon github">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#e8e8f0"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+        </div>
+        <div class="contact-link-text">
+          <span class="contact-link-label">GitHub</span>
+          <span class="contact-link-value">Ver mis repositorios</span>
+        </div>
+      </a>
+      <a href="mailto:tu@email.com" class="contact-link">
+        <div class="contact-link-icon email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#00f0a0"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </div>
+        <div class="contact-link-text">
+          <span class="contact-link-label">Email</span>
+          <span class="contact-link-value">tu@email.com</span>
+        </div>
+      </a>
+    </div>
+    <div class="contact-cta">
+      <h3>¿Tienes un proyecto en mente?</h3>
+      <p>Estoy disponible para proyectos freelance, colaboraciones y posiciones remotas. Si necesitas un desarrollador Full Stack con experiencia en .NET, JavaScript y Android, hablemos.</p>
+      <a href="https://www.linkedin.com/in/jaime-garc%C3%ADa-granados-46b283290/" target="_blank" class="btn-primary">Conectar en LinkedIn →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Jaime García Granados · Hecho con código y café · Barcelona</p>
+</footer>
+
+</body>
+</html>
